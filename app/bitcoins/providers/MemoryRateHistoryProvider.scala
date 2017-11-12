@@ -12,7 +12,12 @@ class MemoryRateHistoryProvider @Inject()(implicit val ec: ExecutionContext) ext
   override def saveRates(rates: Seq[Rate]) = Future {
     val now = System.currentTimeMillis()
     repo = rates.foldLeft(repo)((acc, rate) => {
-      acc + (rate.code -> (acc.getOrElse(rate.code, Seq()) :+ RateHistory(rate.rate, now)))
+      val currencyHistory = acc.get(rate.code)
+      rate match {
+        case r if !currencyHistory.flatMap(_.lastOption.map(_.rate)).contains(r.rate) =>
+          acc + (r.code -> (currencyHistory.getOrElse(Seq()) :+ RateHistory(r.rate, now)))
+        case _ => acc
+      }
     })
   }
 

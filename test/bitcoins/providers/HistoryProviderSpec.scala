@@ -19,6 +19,14 @@ class HistoryProviderSpec extends PlaySpec with GuiceOneAppPerTest with Injectin
       rateHistory.forall(_.stamp >= now) mustBe true
     }
 
+    "save only one time same rate" in {
+      val currencyProvider = inject[RateHistoryProvider]
+      await(currencyProvider.saveRates(Seq(Rate(Fixtures.btcCode, Fixtures.btcName, 0.12))))
+      await(currencyProvider.saveRates(Seq(Rate(Fixtures.btcCode, Fixtures.btcName, 0.12))))
+      val rateHistory = await(currencyProvider.get(Fixtures.btcCode))
+      rateHistory.map(_.rate) mustEqual Seq(0.12)
+    }
+
     "get rates" in {
       val currencyProvider = inject[RateHistoryProvider]
       await(currencyProvider.saveRates(Seq(Rate(Fixtures.btcCode, Fixtures.btcName, 0.12))))
