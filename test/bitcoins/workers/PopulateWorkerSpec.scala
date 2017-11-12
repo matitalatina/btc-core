@@ -1,21 +1,15 @@
 package bitcoins.workers
 
 import bitcoins.Fixtures
+import bitcoins.mocks.MockBitcoinRatesService
 import bitcoins.providers.{CurrencyProvider, RateHistoryProvider}
 import bitcoins.services.BitcoinRatesService
-import bitcoins.viewmodels.Rate
 import org.scalatestplus.play.PlaySpec
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-
-class MockBitcoinRatesService extends BitcoinRatesService {
-  override def fetch(): Future[Option[Seq[Rate]]] = Future(Option(Seq(Fixtures.rateBtc, Fixtures.rateEur)))
-}
 
 class PopulateWorkerSpec extends PlaySpec {
 
