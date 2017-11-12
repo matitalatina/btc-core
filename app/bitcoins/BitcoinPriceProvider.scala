@@ -1,0 +1,5 @@
+package bitcoins
+
+class BitcoinPriceProvider {
+
+}
