@@ -5,7 +5,7 @@ import bitcoins.models.Currency
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class MemoryCurrencyProvider @Inject() (implicit val ec: ExecutionContext) extends CurrencyProvider {
+class MemoryCurrencyProvider @Inject() (implicit ec: ExecutionContext) extends CurrencyProvider {
   override def getAll = Future(repo)
 
   override def get(code: String) = Future(repo.find(_.code == code))

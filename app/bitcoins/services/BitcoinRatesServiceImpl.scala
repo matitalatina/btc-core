@@ -8,7 +8,7 @@ import play.api.libs.ws.{WSClient, WSResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class BitcoinRatesServiceImpl @Inject()(ws: WSClient, implicit val ec: ExecutionContext) extends BitcoinRatesService {
+class BitcoinRatesServiceImpl @Inject()(ws: WSClient)(implicit ec: ExecutionContext) extends BitcoinRatesService {
 
   def fetch(): Future[Option[Seq[Rate]]] = ws
     .url(BitcoinRatesServiceImpl.URL)

@@ -6,7 +6,7 @@ import bitcoins.viewmodels.{Rate, RateHistory}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class MemoryRateHistoryProvider @Inject()(implicit val ec: ExecutionContext) extends RateHistoryProvider {
+class MemoryRateHistoryProvider @Inject()(implicit ec: ExecutionContext) extends RateHistoryProvider {
   override def get(code: String) = Future(repo.getOrElse(code, Seq()))
 
   override def saveRates(rates: Seq[Rate]) = Future {
