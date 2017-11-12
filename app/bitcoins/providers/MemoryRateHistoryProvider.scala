@@ -1,11 +1,12 @@
 package bitcoins.providers
 
-import javax.inject.Inject
+import javax.inject.{Inject, _}
 
 import bitcoins.viewmodels.{Rate, RateHistory}
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class MemoryRateHistoryProvider @Inject()(implicit ec: ExecutionContext) extends RateHistoryProvider {
   override def get(code: String) = Future(repo.getOrElse(code, Seq()))
 

@@ -1,6 +1,6 @@
 package bitcoins.services
 
-import javax.inject.Inject
+import javax.inject.{Inject, _}
 
 import bitcoins.Formatters._
 import bitcoins.viewmodels.Rate
@@ -8,6 +8,7 @@ import play.api.libs.ws.{WSClient, WSResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class BitcoinRatesServiceImpl @Inject()(ws: WSClient)(implicit ec: ExecutionContext) extends BitcoinRatesService {
 
   def fetch(): Future[Option[Seq[Rate]]] = ws

@@ -1,11 +1,13 @@
 package bitcoins.providers
-import javax.inject.Inject
+
+import javax.inject.{Inject, _}
 
 import bitcoins.models.Currency
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class MemoryCurrencyProvider @Inject() (implicit ec: ExecutionContext) extends CurrencyProvider {
+@Singleton
+class MemoryCurrencyProvider @Inject()(implicit ec: ExecutionContext) extends CurrencyProvider {
   override def getAll = Future(repo)
 
   override def get(code: String) = Future(repo.find(_.code == code))
