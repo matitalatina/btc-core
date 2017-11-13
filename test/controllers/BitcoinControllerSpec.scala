@@ -20,4 +20,12 @@ class BitcoinControllerSpec extends PlaySpec with GuiceOneAppPerTest with Inject
       contentType(home) mustBe Some("application/json")
     }
   }
+
+  "RateStats GET" should {
+    "return 404 if no currency found" in {
+      val controller = inject[BitcoinController]
+      val rate = controller.rateStats("WHAT").apply(FakeRequest(GET, "/bitcoins/rates/WHAT/"))
+      status(rate) mustBe NOT_FOUND
+    }
+  }
 }
