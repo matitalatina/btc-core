@@ -21,14 +21,15 @@ class BitcoinController @Inject()(
     currencyProvider.getAll.map(c => Ok(Json.toJson(c.toSeq.sortBy(_.code))))
   }
 
-  def rateStats(currencyCode: String): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
-    for {
-      currency <- currencyProvider.get(currencyCode)
-      history <- rateHistoryProvider.get(currencyCode)
-    } yield
-      currency
-        .map(c => Ok(Json.toJson(RateStatsResponse(c, Some(history)))))
-        .getOrElse(NotFound)
-  }
+  def rateStats(currencyCode: String, limit: Option[Int] = None): Action[AnyContent] =
+    Action.async { implicit request: Request[AnyContent] =>
+      for {
+        currency <- currencyProvider.get(currencyCode)
+        history <- rateHistoryProvider.get(currencyCode, limit)
+      } yield
+        currency
+          .map(c => Ok(Json.toJson(RateStatsResponse(c, Some(history)))))
+          .getOrElse(NotFound)
+    }
 
 }

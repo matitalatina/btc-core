@@ -8,7 +8,10 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class MemoryRateHistoryProvider @Inject()(implicit ec: ExecutionContext) extends RateHistoryProvider {
-  override def get(code: String) = Future(repo.getOrElse(code, Seq()))
+  override def get(code: String, limit: Option[Int]) = Future {
+    val history = repo.getOrElse(code, Seq())
+    limit.map(history.take).getOrElse(history)
+  }
 
   override def saveRates(rates: Seq[Rate]) = Future {
     val now = System.currentTimeMillis()
