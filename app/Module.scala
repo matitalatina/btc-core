@@ -1,6 +1,7 @@
 import bitcoins.jobs.BitcoinRateFetchJob
 import bitcoins.providers.{CurrencyProvider, MemoryCurrencyProvider, MemoryRateHistoryProvider, RateHistoryProvider}
 import bitcoins.services.{BitcoinRatesService, BitcoinRatesServiceImpl}
+import bitcoins.stats.{RateStatsCalculator, RateStatsCalculatorImpl}
 import bitcoins.workers.{PopulateWorker, PopulateWorkerImpl}
 import com.google.inject.AbstractModule
 import play.api.inject.{SimpleModule, _}
@@ -10,6 +11,7 @@ class Module extends AbstractModule {
     bind(classOf[CurrencyProvider]).to(classOf[MemoryCurrencyProvider])
     bind(classOf[BitcoinRatesService]).to(classOf[BitcoinRatesServiceImpl])
     bind(classOf[RateHistoryProvider]).to(classOf[MemoryRateHistoryProvider])
+    bind(classOf[RateStatsCalculator]).to(classOf[RateStatsCalculatorImpl])
     bind(classOf[PopulateWorker]).to(classOf[PopulateWorkerImpl])
   }
 }
