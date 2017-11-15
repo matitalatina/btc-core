@@ -1,6 +1,6 @@
 package bitcoins.stats
 
-import bitcoins.viewmodels.RateHistory
+import bitcoins.models.RateHistory
 
 trait RateStatsCalculator {
   def weightedAverage(history: Seq[RateHistory]): BigDecimal

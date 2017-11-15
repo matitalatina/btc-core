@@ -2,7 +2,8 @@ package bitcoins.providers
 
 import javax.inject.{Inject, _}
 
-import bitcoins.viewmodels.{Rate, RateHistory}
+import bitcoins.models.RateHistory
+import bitcoins.viewmodels.Rate
 
 import scala.concurrent.{ExecutionContext, Future}
 

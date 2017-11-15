@@ -2,6 +2,7 @@ package controllers
 
 import bitcoins.Fixtures
 import bitcoins.Formatters._
+import bitcoins.models.RateHistory
 import bitcoins.providers.{CurrencyProvider, RateHistoryProvider}
 import bitcoins.viewmodels.{Rate, RateStatsResponse}
 import org.scalatestplus.play.PlaySpec
@@ -39,34 +40,33 @@ class BitcoinControllerSpec extends PlaySpec with GuiceOneAppPerTest with Inject
     }
   }
 
-  "RateStats GET" should {
+  /*"RateStats GET" should {
     "return 404 if no currency found" in {
       val controller = inject[BitcoinController]
-      val rate = controller.rateStats("WHAT").apply(FakeRequest(GET, "/bitcoins/rates/WHAT/"))
+      val rate = controller.rateHistory("WHAT").apply(FakeRequest(GET, "/bitcoins/rates/WHAT/"))
       status(rate) mustBe NOT_FOUND
     }
-  }
+  }*/
 
-  "RateStats GET" should {
+  "RateHistory GET" should {
     "return all rates of a currency" in {
       await(loadCurrencySample)
       val controller = inject[BitcoinController]
-      val rate = controller.rateStats(Fixtures.codeEur)
+      val rate = controller.rateHistory(Fixtures.codeEur)
         .apply(FakeRequest(GET, s"/bitcoins/rates/${Fixtures.codeEur}/"))
       status(rate) mustBe OK
-      val rateStats = contentAsJson(rate).validate[RateStatsResponse].get
-      rateStats.currency mustEqual Fixtures.currencyEur
-      rateStats.history.get.size mustBe MAX_RATES_COUNT
+      val rateStats = contentAsJson(rate).validate[Seq[RateHistory]].get
+      rateStats.size mustBe MAX_RATES_COUNT
     }
     "handle limit query param" in {
       await(loadCurrencySample)
       val LIMIT = 5
       val controller = inject[BitcoinController]
-      val rate = controller.rateStats(Fixtures.codeEur, Some(LIMIT))
+      val rate = controller.rateHistory(Fixtures.codeEur, Some(LIMIT))
         .apply(FakeRequest(GET, s"/bitcoins/rates/${Fixtures.codeEur}/?limit=$LIMIT"))
       status(rate) mustBe OK
-      val rateStats = contentAsJson(rate).validate[RateStatsResponse].get
-      rateStats.history.get.size mustBe LIMIT
+      val rateStats = contentAsJson(rate).validate[Seq[RateHistory]].get
+      rateStats.size mustBe LIMIT
     }
   }
 }

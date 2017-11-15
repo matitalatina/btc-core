@@ -2,7 +2,7 @@ package bitcoins.stats
 
 import javax.inject.Singleton
 
-import bitcoins.viewmodels.RateHistory
+import bitcoins.models.RateHistory
 
 @Singleton
 class RateStatsCalculatorImpl extends RateStatsCalculator {

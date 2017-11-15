@@ -1,6 +1,6 @@
 package bitcoins.stats
 
-import bitcoins.viewmodels.RateHistory
+import bitcoins.models.RateHistory
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.test.Injecting

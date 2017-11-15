@@ -1,6 +1,7 @@
 package bitcoins.providers
 
-import bitcoins.viewmodels.{Rate, RateHistory}
+import bitcoins.models.RateHistory
+import bitcoins.viewmodels.Rate
 
 import scala.concurrent.Future
 

@@ -1,7 +1,8 @@
 package bitcoins.mocks
 
+import bitcoins.models.RateHistory
 import bitcoins.providers.RateHistoryProvider
-import bitcoins.viewmodels.{Rate, RateHistory}
+import bitcoins.viewmodels.Rate
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

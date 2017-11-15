@@ -1,7 +1,7 @@
 package bitcoins
 
-import bitcoins.models.Currency
-import bitcoins.viewmodels.{Rate, RateHistory, RateStatsResponse}
+import bitcoins.models.{Currency, RateHistory}
+import bitcoins.viewmodels.{Rate, RateStatsResponse}
 import play.api.libs.json.{Json, OFormat}
 
 object Formatters {

@@ -1,4 +1,4 @@
-package bitcoins.viewmodels
+package bitcoins.models
 
 case class RateHistory(
                         rate: BigDecimal,
