@@ -11,7 +11,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class MemoryRateHistoryProvider @Inject()(implicit ec: ExecutionContext) extends RateHistoryProvider {
   override def get(code: String, limit: Option[Int]) = Future {
     val history = repo.getOrElse(code, Seq())
-    limit.map(history.take).getOrElse(history)
+    limit.map(history.takeRight).getOrElse(history)
   }
 
   override def saveRates(rates: Seq[Rate]) = Future {
