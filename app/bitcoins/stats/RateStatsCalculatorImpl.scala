@@ -3,6 +3,7 @@ package bitcoins.stats
 import javax.inject.Singleton
 
 import bitcoins.models.RateHistory
+import bitcoins.viewmodels.Stats
 
 @Singleton
 class RateStatsCalculatorImpl extends RateStatsCalculator {
@@ -39,4 +40,11 @@ class RateStatsCalculatorImpl extends RateStatsCalculator {
       .map({ case (h, weight) => weight * Math.pow((h.rate - avg).toDouble, 2) })
       .sum
   }
+
+  override def stats(history: Seq[RateHistory]) = Stats(
+    min = min(history),
+    max = max(history),
+    avg = weightedAverage(history),
+    variance = variance(history),
+  )
 }

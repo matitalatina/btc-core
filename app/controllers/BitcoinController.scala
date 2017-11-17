@@ -6,7 +6,7 @@ import bitcoins.Formatters._
 import bitcoins.providers.{CurrencyProvider, RateHistoryProvider}
 import bitcoins.viewmodels.RateStatsResponse
 import play.api.libs.json.Json
-import play.api.mvc._
+import play.api.mvc.{Action, _}
 
 import scala.concurrent.ExecutionContext
 
@@ -25,6 +25,13 @@ class BitcoinController @Inject()(
     Action.async { implicit request: Request[AnyContent] =>
       for {
         history <- rateHistoryProvider.get(currencyCode, limit)
+      } yield Ok(Json.toJson(history))
+    }
+
+  def get(currencyCode: String): Action[AnyContent] =
+    Action.async { implicit request: Request[AnyContent] =>
+      for {
+        history <- rateHistoryProvider.get(currencyCode, Some(1))
       } yield Ok(Json.toJson(history))
     }
 

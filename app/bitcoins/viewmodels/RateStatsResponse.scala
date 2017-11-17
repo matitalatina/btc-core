@@ -1,5 +1,5 @@
 package bitcoins.viewmodels
 
-import bitcoins.models.{Currency, RateHistory}
+import bitcoins.models.RateHistory
 
-case class RateStatsResponse(currency: Currency, history: Option[Seq[RateHistory]])
+case class RateStatsResponse(rate: RateHistory, stats: Stats)
