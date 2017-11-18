@@ -3,8 +3,6 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
 
-# An example controller showing a sample home page
-GET     /                                        controllers.HomeController.index
 GET     /bitcoins/currencies/                    controllers.BitcoinController.currencies
 GET     /bitcoins/rates/:currencyCode/           controllers.BitcoinController.get(currencyCode)
 GET     /bitcoins/rates/:currencyCode/updates/   controllers.BitcoinController.socket(currencyCode)
