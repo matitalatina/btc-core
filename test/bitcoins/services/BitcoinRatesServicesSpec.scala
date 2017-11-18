@@ -22,7 +22,7 @@ class BitcoinRatesServicesSpec extends PlaySpec {
   "BitcointRatesServicesImpl" should {
     "return rates" in {
       val ws = MockWS.apply({
-        case (GET, "https://bitpay.com/api/rates") => Action {
+        case (GET, "https://bitpay.com/api/rates/") => Action {
           Ok("""[{"code":"BTC","name":"Bitcoin","rate":1},{"code":"USD","name":"US Dollar","rate":6450},{"code":"EUR","name":"Eurozone Euro","rate":5529.456}]""")
         }
       })
@@ -37,7 +37,7 @@ class BitcoinRatesServicesSpec extends PlaySpec {
 
     "return None if any error" in {
       val ws = MockWS.apply({
-        case (GET, "https://bitpay.com/api/rates") => Action(BadGateway("Error"))
+        case (GET, "https://bitpay.com/api/rates/") => Action(BadGateway("Error"))
       })
       await(rateService(ws).fetch()) mustBe None
     }
