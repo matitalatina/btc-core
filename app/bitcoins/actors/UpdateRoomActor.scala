@@ -28,7 +28,7 @@ class UpdateRoomActor @Inject()() extends Actor {
     sockets.foreach(_ ! ListenerSocketActor.SendToClient(currencyCode))
   }
 
-  override def receive: PartialFunction[Any, Unit] = {
+  override def receive = {
     case RegisterSocket(socket) =>
       println("Welcome " + socket)
       sockets = socket :: sockets

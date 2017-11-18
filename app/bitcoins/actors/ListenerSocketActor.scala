@@ -37,14 +37,14 @@ class ListenerSocketActor(
                            rateStatsCalculator: RateStatsCalculator) extends Actor {
   updateRoom ! UpdateRoomActor.RegisterSocket(self)
 
-  override def receive: PartialFunction[Any, Unit] = {
+  override def receive = {
     case SendToClient(code) if code == currencyCode => for {
       history <- rateHistoryProvider.get(currencyCode)
     } yield
       history.lastOption.foreach(h => out ! Json.toJson(RateStatsResponse(h, rateStatsCalculator.stats(history))))
   }
 
-  override def postStop(): Unit = {
+  override def postStop() = {
     updateRoom ! UpdateRoomActor.UnRegisterSocket(self)
   }
 }
