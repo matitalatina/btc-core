@@ -15,12 +15,13 @@ class RateStatsCalculatorImpl extends RateStatsCalculator {
       low <- lowOpt
       high <- highOpt
       span = (high.stamp - low.stamp).toDouble
-    } yield history.zip(history.tail :+ history.last).map({ case (h1, h2) => h1 -> (h2.stamp - h1.stamp).toDouble / span })
+    } yield history.zip(history.tail :+ history.last)
+      .map({ case (h1, h2) => h1 -> (if (span != 0) (h2.stamp - h1.stamp).toDouble / span else 0) })
     weighted.getOrElse(Seq.empty)
   }
 
   def weightedAverage(history: Seq[RateHistory]): BigDecimal = withWeights(history)
-    .map({case (h, weight) => h.rate * weight})
+    .map({ case (h, weight) => h.rate * weight })
     .sum
 
 

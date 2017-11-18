@@ -4,9 +4,10 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /                                    controllers.HomeController.index
-GET     /bitcoins/currencies/                controllers.BitcoinController.currencies
-GET     /bitcoins/rates/:currencyCode/       controllers.BitcoinController.rateHistory(currencyCode, limit)
+GET     /                                        controllers.HomeController.index
+GET     /bitcoins/currencies/                    controllers.BitcoinController.currencies
+GET     /bitcoins/rates/:currencyCode/           controllers.BitcoinController.get(currencyCode)
+GET     /bitcoins/rates/:currencyCode/history/   controllers.BitcoinController.rateHistory(currencyCode, limit)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

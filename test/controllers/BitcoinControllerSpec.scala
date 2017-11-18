@@ -63,10 +63,22 @@ class BitcoinControllerSpec extends PlaySpec with GuiceOneAppPerTest with Inject
       val LIMIT = 5
       val controller = inject[BitcoinController]
       val rate = controller.rateHistory(Fixtures.codeEur, Some(LIMIT))
-        .apply(FakeRequest(GET, s"/bitcoins/rates/${Fixtures.codeEur}/?limit=$LIMIT"))
+        .apply(FakeRequest(GET, s"/bitcoins/rates/${Fixtures.codeEur}/history/?limit=$LIMIT"))
       status(rate) mustBe OK
       val rateStats = contentAsJson(rate).validate[Seq[RateHistory]].get
       rateStats.size mustBe LIMIT
+    }
+  }
+
+  "Update GET" should {
+    "return stats and rate" in {
+      val controller = inject[BitcoinController]
+      await(loadCurrencySample)
+      val rate = controller.get(Fixtures.codeEur)
+        .apply(FakeRequest(GET, s"/bitcoins/rates/${Fixtures.codeEur}/"))
+      status(rate) mustBe OK
+      val stats = contentAsJson(rate).validate[RateStatsResponse].get
+      stats.rate.rate mustBe 1
     }
   }
 }
