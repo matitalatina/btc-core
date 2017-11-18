@@ -11,7 +11,7 @@ import bitcoins.viewmodels.RateStatsResponse
 import com.google.inject.assistedinject.Assisted
 import play.api.libs.json.Json
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 
 object ListenerSocketActor {
 
@@ -31,17 +31,20 @@ class ListenerSocketActor @Inject()(
                                      rateStatsCalculator: RateStatsCalculator,
                                      @Assisted out: ActorRef,
                                      @Assisted currencyCode: String,
-                                   ) extends Actor {
+                                   )(implicit ec: ExecutionContext) extends Actor {
   updateRoom ! UpdateRoomActor.RegisterSocket(self)
+  sendRateStatResponse
 
   override def receive = {
-    case SendToClient(code) if code == currencyCode => for {
-      history <- rateHistoryProvider.get(currencyCode)
-    } yield
-      history.lastOption.foreach(h => out ! Json.toJson(RateStatsResponse(h, rateStatsCalculator.stats(history))))
+    case SendToClient(code) if code == currencyCode => sendRateStatResponse
   }
 
   override def postStop() = {
     updateRoom ! UpdateRoomActor.UnRegisterSocket(self)
   }
+
+  private def sendRateStatResponse = for {
+    history <- rateHistoryProvider.get(currencyCode)
+  } yield
+    history.lastOption.foreach(h => out ! Json.toJson(RateStatsResponse(h, rateStatsCalculator.stats(history))))
 }
