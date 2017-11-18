@@ -25,7 +25,7 @@ object ListenerSocketActor {
 
   sealed trait Message
 
-  case class SendToClient() extends Message
+  case class SendToClient(currencyCode: String) extends Message
 
 }
 
@@ -38,7 +38,7 @@ class ListenerSocketActor(
   updateRoom ! UpdateRoomActor.RegisterSocket(self)
 
   override def receive: PartialFunction[Any, Unit] = {
-    case SendToClient() => for {
+    case SendToClient(currencyCode) if currencyCode == currencyCode => for {
       history <- rateHistoryProvider.get(currencyCode)
     } yield
       history.lastOption match {

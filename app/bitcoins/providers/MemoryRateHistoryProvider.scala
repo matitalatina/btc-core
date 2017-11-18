@@ -20,16 +20,12 @@ class MemoryRateHistoryProvider @Inject()(
 
   override def saveRates(rates: Seq[Rate]) = Future {
     val now = System.currentTimeMillis()
-    val ratesToUpdate = rates.filter(r => repo.get(r.code).flatMap(_.lastOption).map(c => c.rate != r.rate).getOrElse(false))
-
-    repo = rates.foldLeft(repo)((acc, rate) => {
-      val currencyHistory = acc.get(rate.code)
-      rate match {
-        case r if !currencyHistory.flatMap(_.lastOption.map(_.rate)).contains(r.rate) =>
-          acc + (r.code -> (currencyHistory.getOrElse(Seq()) :+ RateHistory(r.rate, now)))
-        case _ => acc
-      }
-    })
+    val ratesToUpdate = rates.filter(r => repo.get(r.code).flatMap(_.lastOption).forall(c => c.rate != r.rate))
+    ratesToUpdate
+      .foreach(rateToUpdate => {
+        repo += (rateToUpdate.code -> (repo.getOrElse(rateToUpdate.code, Seq()) :+ RateHistory(rateToUpdate.rate, now)))
+        updateRoom ! UpdateRoomActor.BroadcastUpdate(rateToUpdate.code)
+      })
   }
 
   var repo: Map[String, Seq[RateHistory]] = Map()

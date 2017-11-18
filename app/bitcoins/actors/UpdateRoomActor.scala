@@ -12,7 +12,7 @@ object UpdateRoomActor {
 
   sealed trait Message
 
-  case class BroadcastUpdate() extends Message
+  case class BroadcastUpdate(currencyCode: String) extends Message
 
   case class RegisterSocket(out: ActorRef) extends Message
 
@@ -24,8 +24,8 @@ class UpdateRoomActor @Inject()() extends Actor {
 
   var sockets: List[ActorRef] = List[ActorRef]()
 
-  def sendToAll(): Unit = {
-    sockets.foreach(_ ! ListenerSocketActor.SendToClient())
+  def sendToAll(currencyCode: String): Unit = {
+    sockets.foreach(_ ! ListenerSocketActor.SendToClient(currencyCode))
   }
 
   override def receive: PartialFunction[Any, Unit] = {
@@ -36,6 +36,6 @@ class UpdateRoomActor @Inject()() extends Actor {
     case UnRegisterSocket(socket) =>
       sockets = sockets.filterNot(_ == socket)
 
-    case BroadcastUpdate() => sendToAll()
+    case BroadcastUpdate(currencyCode: String) => sendToAll(currencyCode)
   }
 }
