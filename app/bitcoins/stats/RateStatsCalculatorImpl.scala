@@ -20,9 +20,12 @@ class RateStatsCalculatorImpl extends RateStatsCalculator {
     weighted.getOrElse(Seq.empty)
   }
 
-  def weightedAverage(history: Seq[RateHistory]): BigDecimal = withWeights(history)
-    .map({ case (h, weight) => h.rate * weight })
-    .sum
+  def weightedAverage(history: Seq[RateHistory]): BigDecimal = history match {
+    case Seq(elem) => elem.rate
+    case _ => withWeights(history)
+      .map({ case (h, weight) => h.rate * weight })
+      .sum
+  }
 
 
   def max(history: Seq[RateHistory]): BigDecimal = history match {
