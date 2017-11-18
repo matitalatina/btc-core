@@ -2,7 +2,7 @@ package controllers
 
 import javax.inject._
 
-import akka.actor.{ActorRef, ActorSystem}
+import akka.actor.{ActorRef, ActorSystem, Props}
 import akka.stream.Materializer
 import bitcoins.Formatters._
 import bitcoins.actors.{ListenerSocketActor, UpdateRoomActor}
@@ -22,6 +22,7 @@ class BitcoinController @Inject()(
                                    rateHistoryProvider: RateHistoryProvider,
                                    rateStatsCalculator: RateStatsCalculator,
                                    @Named(UpdateRoomActor.name) updateRoom: ActorRef,
+                                   listenerSocketFactory: ListenerSocketActor.Factory
                                  )(implicit ec: ExecutionContext, system: ActorSystem, mat: Materializer)
   extends AbstractController(cc) {
 
@@ -48,14 +49,7 @@ class BitcoinController @Inject()(
     }
 
   def socket(currencyCode: String) = WebSocket.accept[Any, JsValue] { request =>
-    ActorFlow.actorRef(
-      ListenerSocketActor.props(
-        currencyCode,
-        updateRoom,
-        rateHistoryProvider,
-        rateStatsCalculator,
-      )
-    )
+    ActorFlow.actorRef(out => Props(listenerSocketFactory(out, currencyCode)))
   }
 
 }

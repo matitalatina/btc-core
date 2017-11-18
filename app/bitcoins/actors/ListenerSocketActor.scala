@@ -1,26 +1,22 @@
 package bitcoins.actors
 
-import akka.actor.{Actor, ActorRef, Props}
+import javax.inject.{Inject, Named}
+
+import akka.actor.{Actor, ActorRef}
 import bitcoins.Formatters._
 import bitcoins.actors.ListenerSocketActor.SendToClient
 import bitcoins.providers.RateHistoryProvider
 import bitcoins.stats.RateStatsCalculator
 import bitcoins.viewmodels.RateStatsResponse
+import com.google.inject.assistedinject.Assisted
 import play.api.libs.json.Json
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 object ListenerSocketActor {
-  def props(currencyCode: String,
-            updateRoom: ActorRef,
-            rateHistoryProvider: RateHistoryProvider,
-            rateStatsCalculator: RateStatsCalculator)(out: ActorRef): Props = {
 
-    Props(new ListenerSocketActor(
-      out,
-      currencyCode,
-      updateRoom,
-      rateHistoryProvider,
-      rateStatsCalculator))
+  trait Factory {
+    def apply(out: ActorRef, currencyCode: String): Actor
   }
 
   sealed trait Message
@@ -29,12 +25,13 @@ object ListenerSocketActor {
 
 }
 
-class ListenerSocketActor(
-                           out: ActorRef,
-                           currencyCode: String,
-                           updateRoom: ActorRef,
-                           rateHistoryProvider: RateHistoryProvider,
-                           rateStatsCalculator: RateStatsCalculator) extends Actor {
+class ListenerSocketActor @Inject()(
+                                     @Named(UpdateRoomActor.name) updateRoom: ActorRef,
+                                     rateHistoryProvider: RateHistoryProvider,
+                                     rateStatsCalculator: RateStatsCalculator,
+                                     @Assisted out: ActorRef,
+                                     @Assisted currencyCode: String,
+                                   ) extends Actor {
   updateRoom ! UpdateRoomActor.RegisterSocket(self)
 
   override def receive = {

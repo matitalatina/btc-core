@@ -1,4 +1,4 @@
-import bitcoins.actors.UpdateRoomActor
+import bitcoins.actors.{ListenerSocketActor, UpdateRoomActor}
 import bitcoins.jobs.BitcoinRateFetchJob
 import bitcoins.providers.{CurrencyProvider, MemoryCurrencyProvider, MemoryRateHistoryProvider, RateHistoryProvider}
 import bitcoins.services.{BitcoinRatesService, BitcoinRatesServiceImpl}
@@ -16,6 +16,7 @@ class Module extends AbstractModule with AkkaGuiceSupport {
     bind(classOf[RateStatsCalculator]).to(classOf[RateStatsCalculatorImpl])
     bind(classOf[PopulateWorker]).to(classOf[PopulateWorkerImpl])
     bindActor[UpdateRoomActor](UpdateRoomActor.name)
+    bindActorFactory[ListenerSocketActor, ListenerSocketActor.Factory]
   }
 }
 
