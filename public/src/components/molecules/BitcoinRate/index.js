@@ -6,6 +6,7 @@ import HistoryChart from '../../atoms/HistoryChart'
 import Checkbox from '../../atoms/Checkbox'
 import Stripe from '../../atoms/Stripe'
 import LabelValue from '../../atoms/LabelValue'
+import CurrencyFormatter from '../../atoms/CurrencyFormatter'
 
 const Wrapper = styled.div``
 const WrapperSpaced = styled.div`
@@ -16,13 +17,9 @@ const BitcoinRate = ({ availableRates, history, stats, onChangeRate, currency, h
   const changeRate = val => onChangeRate(val.value)
   let historySection = null
   if (historyVisibility) {
-    const historyRender = history.map((h, i) => (
-      <li key={i}>{h.rate} - {new Date(h.stamp).toISOString()}</li>
-    ))
     historySection = (
       <WrapperSpaced>
         <HistoryChart history={history} currency={currency} />
-        {historyRender}
       </WrapperSpaced>
     )
   }
@@ -30,6 +27,8 @@ const BitcoinRate = ({ availableRates, history, stats, onChangeRate, currency, h
     value: currency.code,
     label: currency.name,
   }
+  console.log(currency.code)
+  const formattedCurrency = value => <CurrencyFormatter currencyCode={currency.code} value={value} />
 
   return (
     <Wrapper>
@@ -45,10 +44,10 @@ const BitcoinRate = ({ availableRates, history, stats, onChangeRate, currency, h
           isChecked={historyVisibility}
           onCheckChange={onHistoryVisibilityChange}
         />
-        <LabelValue label="Min" value={stats.min} />
-        <LabelValue label="Max" value={stats.max} />
-        <LabelValue label="Avg" value={stats.avg} />
-        <LabelValue label="Variance" value={stats.variance} />
+        <LabelValue label="Min" value={formattedCurrency(stats.min)} />
+        <LabelValue label="Max" value={formattedCurrency(stats.max)} />
+        <LabelValue label="Avg" value={formattedCurrency(stats.avg)} />
+        <LabelValue label="Variance" value={formattedCurrency(stats.variance)} />
       </Stripe>
       {historySection}
     </Wrapper>
